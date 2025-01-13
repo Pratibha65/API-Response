@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Response App</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Ask a Question</h1>
+        <form id="query-form">
+            <input type="text" id="query" name="query" placeholder="Type your question here..." required>
+            <button type="submit">Get Response</button>
+        </form>
+        <div id="response-box"></div>
+    </div>
+    <script>
+        const form = document.getElementById('query-form');
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const query = document.getElementById('query').value;
+
+            // Send the query to the Flask backend
+            const response = await fetch('/get-response', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `query=${encodeURIComponent(query)}`
+            });
+
+            // Display the response
+            const data = await response.json();
+            const responseBox = document.getElementById('response-box');
+            responseBox.textContent = data.response;
+        };
+    </script>
+</body>
+</html>
